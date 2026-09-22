@@ -60,9 +60,26 @@ class TestV2ConstructionBiddingInitialization(unittest.TestCase):
             with p.open("r", encoding="utf-8-sig", newline="") as f:
                 header = next(csv.reader(f))
             required = {
-                "工程类别", "项目标签", "合同金额", "建筑面积", "长度", "高度", "跨度", "容量",
+                "工程类别", "项目标签", "合同金额", "金额单位",
+                "建筑面积", "建筑面积单位", "长度", "长度单位", "高度", "高度单位",
+                "跨度", "跨度单位", "容量", "容量单位",
                 "中标日期", "合同日期", "竣工日期", "项目经理", "技术负责人",
                 "中标通知书路径", "合同路径", "验收材料路径", "官方查询证明路径", "证据完整度"
+            }
+            self.assertTrue(required.issubset(set(header)), header)
+
+
+    def test_personal_performance_register_has_units_for_each_metric(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td) / "企业知识库"
+            result = self.run_init(root)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            p = root / "03_结构化索引与台账/个人业绩台账.csv"
+            with p.open("r", encoding="utf-8-sig", newline="") as f:
+                header = next(csv.reader(f))
+            required = {
+                "合同金额", "金额单位", "建筑面积", "建筑面积单位", "长度", "长度单位",
+                "高度", "高度单位", "跨度", "跨度单位", "容量", "容量单位"
             }
             self.assertTrue(required.issubset(set(header)), header)
 

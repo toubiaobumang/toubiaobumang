@@ -2,7 +2,7 @@
 title: "[页面标题]"
 page_type: "实体|主题|来源摘要|综合知识"
 entity_id: "[如适用]"
-status: "已确认|待核验|历史|失效|版本冲突"
+status: "已确认|待核验|历史|失效|版本冲突|缺失|不适用"
 created: "YYYY-MM-DD"
 updated: "YYYY-MM-DD"
 ---

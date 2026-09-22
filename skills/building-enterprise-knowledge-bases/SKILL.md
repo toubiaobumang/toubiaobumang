@@ -3,7 +3,7 @@ name: building-enterprise-knowledge-bases
 description: "Use when a building, engineering, construction, or bidding enterprise wants to initialize, organize, update, audit, or query a reusable enterprise knowledge base for qualifications, personnel, performance, bid evidence, technical assets, and future tender matching."
 compatibility: "Designed for WorkBuddy and compatible Agent Skills clients with authorized workspace file access; Python 3 is optional for deterministic initialization, inventory, duplicate detection, and validation."
 metadata:
-  version: "2.0.0"
+  version: "2.0.1"
   language: "zh-CN"
   display-name: "投标企业知识库自动建库与归档"
   methodology: "原始证据 + 业务实体 + 原子事实 + 结构化台账 + AI知识页 + 投标反查 + 增量审计"
@@ -150,7 +150,7 @@ XX项目 → 建筑面积 → 18600㎡
 
 按 `references/evidence-rules.md` 标记：
 
-- 事实状态：`已确认 / 待核验 / 历史或失效 / 版本冲突 / 缺失 / 不适用`；
+- 事实状态：`已确认 / 待核验 / 历史 / 失效 / 版本冲突 / 缺失 / 不适用`；
 - 证据完整度：`A / B / C / D`。
 
 证据等级描述完整程度，不替代当前招标文件自己的证明材料要求。

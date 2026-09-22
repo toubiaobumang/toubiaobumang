@@ -20,11 +20,14 @@
 | operator | = / != / >= / <= / contains / in / exists / date_after / date_before |
 | expected_value | 标准化目标值 |
 | unit | 万元、㎡、年等；无单位留空 |
-| time_window | 时间范围或起止日期 |
+| time_start | 时间范围起点；可精确到日时建议使用 `YYYY-MM-DD`，无明确起点留空 |
+| time_end | 时间范围终点；可精确到日时建议使用 `YYYY-MM-DD`，无明确终点留空 |
 | required_count | 需要满足的数量 |
 | evidence_requirement | 招标文件明确要求的证明材料 |
 | source_location | 条件在招标文件中的页码/章节 |
 | raw_text | 原始条款，供人工复核 |
+| parent_group | 复合条件所属父组 ID；无父组留空 |
+| logic | 同一父组内逻辑关系：`AND / OR`；非复合条件留空 |
 
 ## 查询：只查“可投标匹配事实”
 
@@ -32,7 +35,7 @@
 
 不得把以下内容当作已满足：
 
-- `待核验`、`版本冲突`、`失效` 的事实；
+- `待核验`、`历史`、`失效`、`版本冲突` 的事实；
 - 只有摘要、没有原始来源的事实；
 - 已过有效期的证书/证明；
 - 数值、时间、工程类别等关键字段缺失时的猜测；

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""安全初始化企业知识库 V2.0。
+"""安全初始化企业知识库 V2.0.1。
 
 默认只创建通用骨架；对建筑/工程/招投标企业使用
 --profile construction-bidding 创建“投标匹配就绪”的专业台账。
@@ -9,6 +9,8 @@ from __future__ import annotations
 
 import argparse
 from pathlib import Path
+
+KB_VERSION = "V2.0.1"
 
 DIRS = [
     "00_待整理入口",
@@ -80,13 +82,15 @@ CONSTRUCTION_BIDDING_CSV_FILES = {
     ),
     "03_结构化索引与台账/企业业绩台账.csv": (
         "业绩ID,项目名称,建设单位,工程类别,专业类别,项目标签,项目地点,合同金额,金额单位,"
-        "建筑面积,长度,高度,跨度,容量,规模单位,中标日期,合同日期,开工日期,竣工日期,"
+        "建筑面积,建筑面积单位,长度,长度单位,高度,高度单位,跨度,跨度单位,容量,容量单位,"
+        "中标日期,合同日期,开工日期,竣工日期,"
         "项目经理,技术负责人,中标通知书路径,合同路径,验收材料路径,官方查询证明路径,"
         "证据完整度,事实状态,最后核验日期,是否可用于投标匹配,备注\n"
     ),
     "03_结构化索引与台账/个人业绩台账.csv": (
         "个人业绩ID,人员ID,姓名,项目ID,项目名称,担任角色,工程类别,专业类别,项目标签,"
-        "合同金额,建筑面积,长度,高度,跨度,容量,任职开始日期,任职结束日期,竣工日期,"
+        "合同金额,金额单位,建筑面积,建筑面积单位,长度,长度单位,高度,高度单位,跨度,跨度单位,容量,容量单位,"
+        "任职开始日期,任职结束日期,竣工日期,"
         "证明材料路径,证据完整度,事实状态,最后核验日期,是否可用于投标匹配,备注\n"
     ),
     "03_结构化索引与台账/信用奖项台账.csv": (
@@ -141,7 +145,7 @@ def write_if_missing(path: Path, content: str, *, bom: bool = False) -> bool:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="初始化企业知识库 V2.0 标准结构")
+    parser = argparse.ArgumentParser(description=f"初始化企业知识库 {KB_VERSION} 标准结构")
     parser.add_argument("root", help="企业知识库根目录")
     parser.add_argument(
         "--profile",
@@ -174,7 +178,7 @@ def main() -> int:
         created_files += int(write_if_missing(root / rel, content))
 
     print(f"初始化完成：{root}")
-    print(f"知识库版本：V2.0")
+    print(f"知识库版本：{KB_VERSION}")
     print(f"档案类型：{args.profile}")
     print(f"新建目录：{created_dirs}")
     print(f"新建基础文件：{created_files}")

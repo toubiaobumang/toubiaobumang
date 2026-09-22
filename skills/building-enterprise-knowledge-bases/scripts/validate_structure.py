@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
-"""校验企业知识库 V2.0 标准骨架及可选投标专业档案。"""
+"""校验企业知识库 V2.0.1 标准骨架及关键表头。"""
 from __future__ import annotations
 
 import argparse
+import csv
 from pathlib import Path
+
+KB_VERSION = "V2.0.1"
 
 REQUIRED_DIRS = [
     "00_待整理入口",
@@ -40,9 +43,32 @@ CONSTRUCTION_BIDDING_REQUIRED_FILES = [
     "03_结构化索引与台账/技术方案索引.csv",
 ]
 
+CONSTRUCTION_BIDDING_REQUIRED_COLUMNS = {
+    "03_结构化索引与台账/投标事实索引.csv": {
+        "事实ID", "对象ID", "对象类型", "对象名称", "属性", "标准值", "原始值", "单位",
+        "事实状态", "证据等级", "来源文件", "正式归档路径", "来源定位", "最后核验日期",
+        "是否可用于投标匹配",
+    },
+    "03_结构化索引与台账/企业业绩台账.csv": {
+        "合同金额", "金额单位", "建筑面积", "建筑面积单位", "长度", "长度单位",
+        "高度", "高度单位", "跨度", "跨度单位", "容量", "容量单位",
+        "证据完整度", "事实状态", "最后核验日期", "是否可用于投标匹配",
+    },
+    "03_结构化索引与台账/个人业绩台账.csv": {
+        "合同金额", "金额单位", "建筑面积", "建筑面积单位", "长度", "长度单位",
+        "高度", "高度单位", "跨度", "跨度单位", "容量", "容量单位",
+        "证明材料路径", "证据完整度", "事实状态", "最后核验日期", "是否可用于投标匹配",
+    },
+}
+
+
+def read_csv_header(path: Path) -> list[str]:
+    with path.open("r", encoding="utf-8-sig", newline="") as f:
+        return next(csv.reader(f), [])
+
 
 def main() -> int:
-    p = argparse.ArgumentParser(description="校验企业知识库 V2.0 结构")
+    p = argparse.ArgumentParser(description=f"校验企业知识库 {KB_VERSION} 结构")
     p.add_argument("root")
     p.add_argument(
         "--profile",
@@ -52,10 +78,10 @@ def main() -> int:
     args = p.parse_args()
     root = Path(args.root).expanduser().resolve()
 
-    missing: list[str] = []
+    problems: list[str] = []
     for rel in REQUIRED_DIRS:
         if not (root / rel).is_dir():
-            missing.append(f"目录  {rel}")
+            problems.append(f"目录缺失  {rel}")
 
     required_files = list(REQUIRED_FILES)
     if args.profile == "construction-bidding":
@@ -63,15 +89,29 @@ def main() -> int:
 
     for rel in required_files:
         if not (root / rel).is_file():
-            missing.append(f"文件  {rel}")
+            problems.append(f"文件缺失  {rel}")
 
-    if missing:
-        print(f"FAIL：企业知识库 V2.0 [{args.profile}] 结构不完整")
-        for item in missing:
+    if args.profile == "construction-bidding":
+        for rel, required_columns in CONSTRUCTION_BIDDING_REQUIRED_COLUMNS.items():
+            path = root / rel
+            if not path.is_file():
+                continue
+            try:
+                header = set(read_csv_header(path))
+            except (OSError, UnicodeError, csv.Error) as exc:
+                problems.append(f"表头无法读取  {rel}：{exc}")
+                continue
+            missing_columns = sorted(required_columns - header)
+            if missing_columns:
+                problems.append(f"表头缺字段  {rel}：{', '.join(missing_columns)}")
+
+    if problems:
+        print(f"FAIL：企业知识库 {KB_VERSION} [{args.profile}] 结构或关键表头不完整")
+        for item in problems:
             print(f"- {item}")
         return 1
 
-    print(f"PASS：企业知识库 V2.0 [{args.profile}] 标准骨架完整")
+    print(f"PASS：企业知识库 {KB_VERSION} [{args.profile}] 标准骨架与关键表头完整")
     return 0
 
 

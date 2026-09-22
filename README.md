@@ -26,8 +26,8 @@ python scripts/initialize_kb.py "<企业知识库根目录>" --profile construct
 
 ## 版本
 
-- 仓库版本：`1.0.0`
-- 企业投标知识库 Skill：`2.0.0`
+- 仓库版本：`1.0.1`
+- 企业投标知识库 Skill：`2.0.1`
 
 ## 使用许可
 
